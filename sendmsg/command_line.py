@@ -107,7 +107,7 @@ def get_response(url, method, data=None, desc=""):
         resp = requests.get(url)
     elif method == "post":
         headers = {"Content-Type": "application/json; charset=utf-8"}
-        sdk.log.info("%s send data: %s" % (desc, data))
+        sdk.log.debug("%s send data: %s" % (desc, data))
         resp = requests.post(url, headers=headers, data=json.dumps(data))
     else:
         exit_with_error(
