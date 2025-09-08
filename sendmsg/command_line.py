@@ -321,10 +321,10 @@ def main():  # noqa
         "content": content,
     }
 
-    sdk.log.info("send_by is {}".format(send_by))
+    sdk.log.debug("send_by is {}".format(send_by))
     if "weixin" in send_by:
         msg_tpl["msg_type"] = "weixin"
-        sdk.log.info("【weixin】 send data is {}".format(msg_tpl))
+        sdk.log.debug("【weixin】 send data is {}".format(msg_tpl))
         resp_json = get_response(
             url=msg_url, method="post", data=msg_tpl, desc="weixin"
         )
@@ -414,7 +414,7 @@ def main():  # noqa
             "markdown": {"content": ""},
         }
         body[webot_msgtype]["content"] = webot_content
-        sdk.log.info("【webot】 send data is {}".format(body))
+        sdk.log.debug("【webot】 send data is {}".format(body))
         r = requests.post(webhook_url, headers=headers, data=json.dumps(body))
         r_json = r.json()
         if r.status_code != 200 or r_json["errcode"] != 0:
