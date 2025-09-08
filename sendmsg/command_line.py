@@ -43,9 +43,9 @@ def exit_with_error(error_type=None, error_code=None, error_msg="failed"):
     exit(error_code)
 
 
-def exit_with_succ(data=None, quality_data=None, msg="run succ"):
+def exit_with_succ(data=None, quality_data=None, msg="run success"):
     """
-    @summary: exit with succ
+    @summary: exit with success
     """
     if not data:
         data = {}
@@ -75,16 +75,24 @@ def get_kwargs_map():
     @summary: self-defined variable map based on BK
     """
     kwargs_map = {}
-    usermgr_host = sdk.get_sensitive_conf("usermgr_host")
-    if usermgr_host:
+    apigw_host = sdk.get_sensitive_conf("apigw_host")
+    if apigw_host:
         username = sdk.get_pipeline_start_user_name()
-        api_url = usermgr_host + "/api/v2/profiles/{}/?lookup_field=username".format(
-            username
+        bk_app_code = sdk.get_sensitive_conf("bk_app_code")
+        bk_app_secret = sdk.get_sensitive_conf("bk_app_secret")
+        api_url = apigw_host + "/api/c/compapi/v2/usermanage/retrieve_user/"
+        resp = requests.post(
+            api_url,
+            json={
+                "bk_app_code": bk_app_code,
+                "bk_app_secret": bk_app_secret,
+                "bk_username": username,
+                "id": username,
+            },
         )
-        resp = requests.get(api_url)
         resp_j = resp.json()
         if resp_j["code"] != 0:
-            sdk.log.info("request %s failed, please contact the devloper." % api_url)
+            sdk.log.info("request %s failed, please contact the developer." % api_url)
             return kwargs_map
         display_name = resp_j["data"]["display_name"]
         kwargs_map["BK_CI_START_FULLNAME"] = display_name
