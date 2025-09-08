@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 
-import sys
 import logging
-
+import sys
 
 LOG_NAME = "ATOM_LOG"
 LOG_FORMAT = "%(bk_ci_placeholder)s%(message)s"
@@ -18,18 +17,19 @@ def getLogger():
 
 
 class MyLoggerAdapter(logging.LoggerAdapter):
-
     def process(self, msg, kwargs):
-        if 'extra' not in kwargs:
+        if "extra" not in kwargs:
             kwargs["extra"] = self.extra
         return msg, kwargs
 
 
 class ContextFilter(logging.Filter):
-
     def filter(self, record):
         bk_ci_placeholder = ""
-        if hasattr(record, "bk_ci_placeholder") and record.bk_ci_placeholder != BK_CI_PLACEHOLDER:
+        if (
+            hasattr(record, "bk_ci_placeholder")
+            and record.bk_ci_placeholder != BK_CI_PLACEHOLDER
+        ):
             bk_ci_placeholder = record.bk_ci_placeholder
         else:
             bk_ci_placeholder = record.levelname.lower()
@@ -37,8 +37,7 @@ class ContextFilter(logging.Filter):
         return True
 
 
-class BKLogger():
-
+class BKLogger:
     def __init__(self):
         init_logger = logging.getLogger(LOG_NAME)
         if init_logger.handlers:
@@ -82,7 +81,7 @@ class BKLogger():
         self.logger.info("", extra={"bk_ci_placeholder": "endgroup"})
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
 
     obj = BKLogger()
     obj.group_start("group1 start")

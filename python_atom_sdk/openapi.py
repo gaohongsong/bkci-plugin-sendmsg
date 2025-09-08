@@ -1,16 +1,17 @@
 # -*- coding: utf-8 -*-
+import json
 import os
 import traceback
+from sys import version_info
+
 import requests
 import requests_toolbelt as rt
-from sys import version_info
-import json
 
 from . import setting
 from .bklog import BKLogger
 
 
-class OpenApi():
+class OpenApi:
     _log = BKLogger()
 
     def __init__(self):
@@ -21,27 +22,31 @@ class OpenApi():
             setting.AUTH_HEADER_DEVOPS_BUILD_TYPE: sdk_json.get("buildType", None),
             setting.AUTH_HEADER_DEVOPS_PROJECT_ID: sdk_json.get("projectId", None),
             setting.AUTH_HEADER_DEVOPS_AGENT_ID: sdk_json.get("agentId", None),
-            setting.AUTH_HEADER_DEVOPS_AGENT_SECRET_KEY: sdk_json.get("secretKey", None),
+            setting.AUTH_HEADER_DEVOPS_AGENT_SECRET_KEY: sdk_json.get(
+                "secretKey", None
+            ),
             setting.AUTH_HEADER_DEVOPS_BUILD_ID: sdk_json.get("buildId", None),
-            setting.AUTH_HEADER_DEVOPS_VM_SEQ_ID: sdk_json.get("vmSeqId", None)
+            setting.AUTH_HEADER_DEVOPS_VM_SEQ_ID: sdk_json.get("vmSeqId", None),
         }
 
         # 保存session增加3次重试
         self.session = requests.Session()
         self.session.trust_env = False
         adapter = requests.adapters.HTTPAdapter(max_retries=3)
-        self.session.mount('http://', adapter)
+        self.session.mount("http://", adapter)
 
     def get_sdk_json(self):
         """
         @summary：获取sdk配置
         """
-        sdk_path = os.path.join(os.environ.get(setting.BK_DATA_DIR, None), setting.BK_SDK_JSON)
+        sdk_path = os.path.join(
+            os.environ.get(setting.BK_DATA_DIR, None), setting.BK_SDK_JSON
+        )
         if not os.path.exists(sdk_path):
             self._log.error("[openapi]init error: sdk json do not exist")
             exit(-1)
 
-        with open(sdk_path, 'r') as f_sdk:
+        with open(sdk_path, "r") as f_sdk:
             content = f_sdk.read()
         if not content:
             self._log.error("[openapi]init error: sdk json is null")
@@ -56,8 +61,10 @@ class OpenApi():
                 exit(-1)
 
             return sdk_json
-        except Exception as _e: # pylint: disable=broad-except
-            self._log.error("[openapi]parse sdk json error, sdk.json is {}" .format(content))
+        except Exception:  # pylint: disable=broad-except
+            self._log.error(
+                "[openapi]parse sdk json error, sdk.json is {}".format(content)
+            )
             print(traceback.format_exc())
             exit(-1)
 
@@ -85,7 +92,11 @@ class OpenApi():
             if res.status_code == 200:
                 ret = res.json()
                 if ret["status"] != 0:
-                    self._log.error("unexpected status: {}, content is {}".format(ret["status"], ret))
+                    self._log.error(
+                        "unexpected status: {}, content is {}".format(
+                            ret["status"], ret
+                        )
+                    )
                     return False, {}
 
                 return True, ret["data"]
@@ -93,9 +104,13 @@ class OpenApi():
                 msg = res.json().get("message", "")
                 if version_info.major == 2:
                     msg = msg.encode("utf-8")
-                self._log.error("unexpected status_code: {}, message is {}".format(res.status_code, msg))
+                self._log.error(
+                    "unexpected status_code: {}, message is {}".format(
+                        res.status_code, msg
+                    )
+                )
                 return False, {}
-        except Exception as _e: # pylint: disable=broad-except
+        except Exception:  # pylint: disable=broad-except
             self._log.error(repr(res.text))
             print(traceback.format_exc())
             return False, {}
@@ -103,7 +118,9 @@ class OpenApi():
     def do_get(self, url, params=None, timeout=60):
         # self._log.debug(url)
         if params:
-            res = self.session.get(url, headers=self.header_auth, params=params, timeout=timeout)
+            res = self.session.get(
+                url, headers=self.header_auth, params=params, timeout=timeout
+            )
         else:
             res = self.session.get(url, headers=self.header_auth, timeout=timeout)
 
@@ -115,7 +132,12 @@ class OpenApi():
 
         with self.session as session:
             if message:
-                res = session.post(url, headers=self.header_auth, data=json.dumps(message), timeout=timeout)
+                res = session.post(
+                    url,
+                    headers=self.header_auth,
+                    data=json.dumps(message),
+                    timeout=timeout,
+                )
             else:
                 res = session.post(url, headers=self.header_auth, timeout=timeout)
 

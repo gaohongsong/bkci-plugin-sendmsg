@@ -1,9 +1,15 @@
 # -*- coding: utf-8 -*-
 
 from .bklog import BKLogger, getLogger
+from .const import (
+    OutputErrorType,
+    OutputFieldType,
+    OutputReportType,
+    OutputTemplateType,
+    Status,
+)
 from .input import ParseParams
 from .output import SetOutput
-from .const import Status, OutputTemplateType, OutputFieldType, OutputReportType, OutputErrorType
 
 log = BKLogger()
 parseParamsObj = ParseParams()
@@ -149,6 +155,7 @@ def set_output(output):
 
 def get_credential(credential_id):
     from .openapi import OpenApi
+
     client = OpenApi()
     return client.get_credential(credential_id)
 

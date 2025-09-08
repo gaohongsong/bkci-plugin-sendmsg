@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
 
-import os
-import json
 import codecs
+import json
+import os
 import sys
 
 from . import setting
 from .bklog import BKLogger
 
 
-class ParseParams():
+class ParseParams:
     """
     @summary: 获取 插件入参
     """
@@ -17,8 +17,8 @@ class ParseParams():
     _log = BKLogger()
 
     def __init__(self):
-        self.data_path = os.getenv(setting.BK_DATA_DIR, '.')
-        self.input_file_name = os.getenv(setting.BK_DATA_INPUT, 'input.json')
+        self.data_path = os.getenv(setting.BK_DATA_DIR, ".")
+        self.input_file_name = os.getenv(setting.BK_DATA_INPUT, "input.json")
 
     def get_input(self):
         """
