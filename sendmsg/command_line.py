@@ -137,7 +137,7 @@ def main():  # noqa
     """
     @summary: main
     """
-    sdk.log.info("enter main")
+    sdk.log.debug("enter main")
 
     # 插件私有配置
     bk_app_code = sdk.get_sensitive_conf("bk_app_code")
@@ -177,7 +177,7 @@ def main():  # noqa
     # 输入
     input_params = sdk.get_input()
     kwargs_map = get_kwargs_map()
-    sdk.log.info("input_params is {}".format(input_params))
+    sdk.log.debug("input_params is {}".format(input_params))
 
     # 企业微信/钉钉接收人
     send_by = []

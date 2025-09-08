@@ -23,7 +23,7 @@ def parse_requirements():
 
 if __name__ == "__main__":
     setup(
-        version="7.0.1",
+        version="7.0.2",
         name="sendmsg",
         description="",
         cmdclass={},
