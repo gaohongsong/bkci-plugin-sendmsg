@@ -31,7 +31,7 @@ if __name__ == "__main__":
         package_data={"": ["*.txt", "*.TXT", "*.JS", "test/*"]},
         install_requires=parse_requirements(),
         entry_points={"console_scripts": ["sendmsg = sendmsg.command_line:main"]},
-        author="ghs1",
-        author_email="ghs1@meitu.com",
+        author="pidougao",
+        author_email="pidougao@qq.com",
         license="Copyright(c)2025-2035 ghs1 All Rights Reserved.",
     )
