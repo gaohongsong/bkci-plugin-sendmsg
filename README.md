@@ -23,24 +23,21 @@
 ## 私有配置
 1. bk_app_code: 蓝盾app code
 2. bk_app_secret: 蓝盾app secret
-3. bk_host: paas地址
+3. apigw_host: 蓝鲸api网关地址，比如 https://bkapi.blueking.com
 4. bk_username: 调用ESB接口的用户，可为admin
 5. robot_webhook: 企业微信机器人webhook地址（不包含key), 为`https://qyapi.weixin.qq.com/cgi-bin/webhook/send`
-6. apigw_host: 蓝鲸api网关地址，比如 https://bkapi.blueking.com
 
     ```bash
     source ${CTRL_DIR:-/data/install}/load_env.sh
 
     echo "bk_app_code      $BK_CI_APP_CODE"
     echo "bk_app_secret    $BK_CI_APP_TOKEN"
-    echo "bk_host          $BK_PAAS_PUBLIC_URL"
     echo "apigw_host     https://bkapi.blueking.com
 
 
     # 参考输出
     bk_app_code       bk_ci
     bk_app_secret     略
-    bk_host           http://paas.bktencent.com:80
     apigw_host      https://bkapi.blueking.com
     ```
 

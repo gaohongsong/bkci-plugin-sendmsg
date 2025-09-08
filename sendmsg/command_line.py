@@ -142,7 +142,7 @@ def main():  # noqa
     # 插件私有配置
     bk_app_code = sdk.get_sensitive_conf("bk_app_code")
     bk_app_secret = sdk.get_sensitive_conf("bk_app_secret")
-    bk_host = sdk.get_sensitive_conf("bk_host")
+    apigw_host = sdk.get_sensitive_conf("apigw_host")
     bk_username = sdk.get_sensitive_conf("bk_username")
 
     if bk_app_code is None:
@@ -159,13 +159,13 @@ def main():  # noqa
             error_msg="bk_app_secret cannot be empty",
         )
 
-    if bk_host is None:
+    if apigw_host is None:
         exit_with_error(
             error_type=sdk.output_error_type.USER,
             error_code=err_code.USER_CONFIG_ERROR,
-            error_msg="bk_host cannot be empty",
+            error_msg="apigw_host cannot be empty",
         )
-    bk_host = bk_host.rstrip("/")
+    apigw_host = apigw_host.rstrip("/")
 
     if bk_username is None:
         exit_with_error(
@@ -177,6 +177,7 @@ def main():  # noqa
     # 输入
     input_params = sdk.get_input()
     kwargs_map = get_kwargs_map()
+    sdk.log.info("input_params is {}".format(input_params))
 
     # 企业微信/钉钉接收人
     send_by = []
@@ -202,7 +203,7 @@ def main():  # noqa
         # 完整邮箱地址
         mails = list(filter(lambda x: "@" in x, receivers))
 
-        list_user_url = bk_host + "/api/c/compapi/v2/usermanage/list_users/"
+        list_user_url = apigw_host + "/api/c/compapi/v2/usermanage/list_users/"
         request_data = {
             "bk_app_code": bk_app_code,
             "bk_app_secret": bk_app_secret,
@@ -309,7 +310,7 @@ def main():  # noqa
 
     headers = {"Content-Type": "application/json; charset=utf-8"}
     # 企业微信、钉钉采用send_msg接口发送
-    msg_url = bk_host + "/api/c/compapi/cmsi/send_msg/"
+    msg_url = apigw_host + "/api/c/compapi/cmsi/send_msg/"
     msg_tpl = {
         "bk_app_code": bk_app_code,
         "bk_app_secret": bk_app_secret,
@@ -331,7 +332,7 @@ def main():  # noqa
 
     # 邮件发送逻辑，采用send_mail接口
     if "mail" in send_by:
-        mail_url = bk_host + "/api/c/compapi/cmsi/send_mail/"
+        mail_url = apigw_host + "/api/c/compapi/cmsi/send_mail/"
         mail_data_tpl = {
             "bk_app_code": bk_app_code,
             "bk_app_secret": bk_app_secret,
@@ -408,13 +409,12 @@ def main():  # noqa
                 sdk.log.info("success to send file {}".format(artifact))
 
         body = {
-            "msgtype": "text",
+            "msgtype": webot_msgtype,
             "text": {"content": "", "mentioned_list": webot_mentioned_list},
             "markdown": {"content": ""},
         }
-        body["msgtype"] = webot_msgtype
         body[webot_msgtype]["content"] = webot_content
-        sdk.log.info("【webot】 send data is is {}".format(body))
+        sdk.log.info("【webot】 send data is {}".format(body))
         r = requests.post(webhook_url, headers=headers, data=json.dumps(body))
         r_json = r.json()
         if r.status_code != 200 or r_json["errcode"] != 0:
@@ -423,7 +423,7 @@ def main():  # noqa
 
     # 钉钉机器人发送逻辑
     if send_by_dingbot:
-        dingbot_url = bk_host + "/api/c/compapi/cmsi/send_dingbot/"
+        dingbot_url = apigw_host + "/api/c/compapi/cmsi/send_dingbot/"
         dingbot_data_tpl = {
             "bk_app_code": bk_app_code,
             "bk_app_secret": bk_app_secret,
