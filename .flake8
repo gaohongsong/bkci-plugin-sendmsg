@@ -1,0 +1,19 @@
+[flake8]
+ignore = F405, W503, E203, F401, F403
+exclude =
+    *migrations*,
+    *.pyc,
+    .git,
+    __pycache__,
+    */node_modules/*
+    ./static/*
+    ./blueking/*
+    ./config/default.py
+    ./tools/*
+
+max-line-length=120
+max-complexity=26
+format=pylint
+show_source=True
+statistics=True
+count=True
