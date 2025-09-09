@@ -5,7 +5,6 @@ import traceback
 from sys import version_info
 
 import requests
-import requests_toolbelt as rt
 
 from . import setting
 from .bklog import BKLogger
